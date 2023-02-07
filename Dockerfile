@@ -1,24 +1,10 @@
-FROM gradle:jdk-alpine
+FROM alpine
 
-WORKDIR /home/gradle/project
+RUN apk update && \
+    apk upgrade 
+RUN apk add openjdk8=8.252.09-r0
 
+ARG JAR_FILE=build/libs/*.jar
+COPY ${JAR_FILE} app.jar
 EXPOSE 8080
-
-USER root
-
-RUN apk update
-
-ENV GRADLE_USER_HOME /home/gradle/project
-
-COPY . /home/gradle/project
-
-RUN gradle build
-
-
-FROM java:8-jre-alpine
-
-WORKDIR /home/gradle/project
-
-COPY --from=0 /home/gradle/project/build/libs/project-0.0.1-SNAPSHOT.jar .
-
-ENTRYPOINT java -jar project-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
