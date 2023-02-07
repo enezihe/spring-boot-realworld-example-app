@@ -15,7 +15,7 @@ COPY . /home/gradle/project
 RUN gradle build
 
 
-FROM java:jre-alpine
+FROM java:8-jre-alpine
 
 WORKDIR /home/gradle/project
 
